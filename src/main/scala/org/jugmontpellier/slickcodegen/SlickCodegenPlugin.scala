@@ -15,30 +15,45 @@ object SlickCodegenPlugin extends AutoPlugin {
   object autoImport {
     val slickCodegenConfFile = settingKey[String]("slick codegen configuration file path")
     val slickCodegenConf = settingKey[String]("slick codegen conf ( #thistoken )")
+
+    val slickCodegen = taskKey[Seq[File]]("Slick codegen")
   }
 
   import autoImport._
 
   override lazy val projectSettings = Seq(
-    slickCodegenConfFile := "src/main/slick/slick-codegen.conf",
-    runner := new ForkRun(ForkOptions()),
-    sourceGenerators in Compile += Def.task[Seq[File]] {
+    slickCodegen :=   {
       val dir = (sourceManaged in Compile).value
       val cp = (dependencyClasspath in Compile).value
       val confFile = slickCodegenConfFile.value
       val conf = slickCodegenConf.value
       implicit val logger = streams.value.log
-      generate(dir, cp, runner.value, confFile, conf).toSeq
+
+      generate(dir, cp, runner.value, confFile, conf, true).toSeq
+    },
+    slickCodegenConfFile := "src/main/slick/slick-codegen.conf",
+
+    runner := new ForkRun(ForkOptions()),
+    sourceGenerators in Compile += Def.task{
+      val dir = (sourceManaged in Compile).value
+      val cp = (dependencyClasspath in Compile).value
+      val confFile = slickCodegenConfFile.value
+      val conf = slickCodegenConf.value
+      implicit val logger = streams.value.log
+
+      generate(dir, cp, runner.value, confFile, conf, false).toSeq
     }.taskValue
 
   )
 
-  def generate(outputDir: File, cp: Classpath, runner: ScalaRun, confFile: String, conf: String)(implicit logger: Logger): Option[File] = for {
+  def generate(outputDir: File, cp: Classpath, runner: ScalaRun, confFile: String, conf: String, force: Boolean)(implicit logger: Logger): Option[File] = for {
       confPath <- confPath(confFile)
       config <- Try(ConfigFactory.parseFile(confPath.toFile).getConfig(conf)).toOption
     } yield {
-      toError(runner.run("slick.codegen.SourceCodeGenerator", cp.files, Array(s"file:$confFile#$conf", outputDir.getPath), logger))
-      outputDir / config.getString("codegen.package").replace('.', '/') / "Tables.scala"
+      val tables = outputDir / config.getString("codegen.package").replace('.', '/') / "Tables.scala"
+      if(force || !tables.exists())
+        toError(runner.run("slick.codegen.SourceCodeGenerator", cp.files, Array(s"file:$confFile#$conf", outputDir.getPath), logger))
+      tables
     }
 
   private def confPath(confFile: String)(implicit logger: Logger) = Option(Paths.get(confFile)) map {
