@@ -31,7 +31,6 @@ object SlickCodegenPlugin extends AutoPlugin {
       implicit val logger = streams.value.log
 
       generates(dir, cp, runner.value, confFile, true)
-
     },
     slickCodegenConfFile := "src/main/slick/slick-codegen.conf",
 
@@ -43,9 +42,7 @@ object SlickCodegenPlugin extends AutoPlugin {
       implicit val logger = streams.value.log
 
       generates(dir, cp, runner.value, confFile, false)
-
-
-    }.taskValue
+    }
 
   )
 
