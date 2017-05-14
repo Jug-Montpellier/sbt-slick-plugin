@@ -19,38 +19,41 @@ object SlickCodegenPlugin extends AutoPlugin {
     val slickCodegenConfFile = settingKey[String]("slick codegen configuration file path")
 
     val slickCodegen = taskKey[Seq[File]]("Slick codegen")
+
+    val outputDir = settingKey[File]("Output dir")
+
   }
 
   import autoImport._
 
   override lazy val projectSettings = Seq(
+    runner := new ForkRun(ForkOptions()),
+    outputDir := (sourceManaged in Compile).value,
+
     slickCodegen := {
-      val dir = (sourceManaged in Compile).value
       val cp = (dependencyClasspath in Compile).value
       val confFile = slickCodegenConfFile.value
       implicit val logger = streams.value.log
 
-      generates(dir, cp, runner.value, confFile, true)
+      generates(outputDir.value, cp, runner.value, confFile, true)
     },
     slickCodegenConfFile := "src/main/slick/slick-codegen.conf",
 
-    runner := new ForkRun(ForkOptions()),
     sourceGenerators in Compile += Def.task {
-      val dir = (sourceManaged in Compile).value
       val cp = (dependencyClasspath in Compile).value
       val confFile = slickCodegenConfFile.value
       implicit val logger = streams.value.log
 
-      generates(dir, cp, runner.value, confFile, false)
+      generates(outputDir.value, cp, runner.value, confFile, false)
     }
 
   )
 
-  private def generates(dir: File, cp: Classpath, run: ScalaRun, confFile: String, force: Boolean)(implicit logger: Logger) = (for {
+  private def generates(outputDir: File, cp: Classpath, run: ScalaRun, confFile: String, force: Boolean)(implicit logger: Logger) = (for {
     config <- confPath(confFile)
     dbs <- databaseNames(config)
   } yield dbs.flatMap {
-    db => generate(dir, cp, run, confFile, config, db, force)
+    db => generate(outputDir, cp, run, confFile, config, db, force)
   }).getOrElse(Nil).toSeq
 
 
