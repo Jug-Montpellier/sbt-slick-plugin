@@ -41,6 +41,11 @@ slickOutputDir := (sourceManaged in Compile).value
 ```
 and scala code will be generated in ```target/scala-2.12/src_managed/main/```
 
+To tie codegeneration to compile:
+```sbtshell
+sourceGenerators in Compile += SlickCodegenPlugin.sourcesGenerator
+```
+
 Enjoy.
 
 
