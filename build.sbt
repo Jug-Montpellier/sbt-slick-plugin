@@ -1,6 +1,12 @@
+import sbtrelease.ReleaseStateTransformations._
+
 name := "sbt-slick-plugin"
 
-organization := "org.jug-montpellier"
+organization := "io.metabookmarks"
+
+crossSbtVersions := Vector("0.13.16", "1.0.0")
+
+releaseCrossBuild := true
 
 resolvers += Resolver.file("local", file(Path.userHome.absolutePath + "/.ivy2/local"))(Resolver.ivyStylePatterns)
 
@@ -14,6 +20,20 @@ libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3" % Test
 
 publishMavenStyle := false
 
-bintrayOrganization := Some("jug-montpellier")
+bintrayOrganization := Some("metabookmarks")
 
 bintrayRepository := "sbt-plugin-releases"
+
+releaseProcess := Seq[ReleaseStep](
+  checkSnapshotDependencies,
+  inquireVersions,
+  runClean,
+  releaseStepCommandAndRemaining("^ test"),
+  setReleaseVersion,
+  commitReleaseVersion,
+  tagRelease,
+  releaseStepCommandAndRemaining("^ publish"),
+  setNextVersion,
+  commitNextVersion,
+  pushChanges
+)
