@@ -8,8 +8,6 @@ crossSbtVersions := Vector("0.13.16", "1.0.0")
 
 releaseCrossBuild := true
 
-resolvers += Resolver.file("local", file(Path.userHome.absolutePath + "/.ivy2/local"))(Resolver.ivyStylePatterns)
-
 sbtPlugin := true
 
 libraryDependencies += "com.typesafe" % "config" % "1.3.1"
