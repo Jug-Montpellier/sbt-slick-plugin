@@ -5,8 +5,8 @@
 Declate plugin in project/plugin.sbt:
 
 ```sbtshell
-resolvers += Resolver.bintrayIvyRepo("jug-montpellier", "sbt-plugin-releases")
-addSbtPlugin("org.jug-montpellier" % "sbt-slick-plugin" % "0.0.7")
+resolvers += Resolver.bintrayIvyRepo("metabookmarks", "sbt-plugin-releases")
+addSbtPlugin("org.jug-montpellier" % "sbt-slick-plugin" % "0.1.1")
 ```
 
 Write codegen descriptor in: src/main/slick/slick-codegen.conf
