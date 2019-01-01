@@ -4,7 +4,9 @@ name := "sbt-slick-plugin"
 
 organization := "io.metabookmarks"
 
-crossSbtVersions := Vector("0.13.17", "1.2.4")
+scalaVersion := "2.12.8"
+
+crossSbtVersions := Vector("0.13.17", "1.2.8")
 
 releaseCrossBuild := true
 
