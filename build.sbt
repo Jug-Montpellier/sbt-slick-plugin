@@ -12,10 +12,10 @@ releaseCrossBuild := true
 
 sbtPlugin := true
 
-libraryDependencies += "com.typesafe" % "config" % "1.3.3"
+libraryDependencies += "com.typesafe" % "config" % "1.3.4"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % Test
-libraryDependencies += "org.slf4j" % "log4j-over-slf4j" % "1.7.25" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % Test
+libraryDependencies += "org.slf4j" % "log4j-over-slf4j" % "1.7.26" % Test
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3" % Test
 
 publishMavenStyle := false
