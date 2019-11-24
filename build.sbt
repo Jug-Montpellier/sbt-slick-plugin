@@ -4,18 +4,16 @@ name := "sbt-slick-plugin"
 
 organization := "io.metabookmarks"
 
-scalaVersion := "2.12.8"
-
-crossSbtVersions := Vector("0.13.17", "1.2.8")
+crossSbtVersions := Vector("0.13.17", "1.3.4")
 
 releaseCrossBuild := true
 
 sbtPlugin := true
 
-libraryDependencies += "com.typesafe" % "config" % "1.3.4"
+libraryDependencies += "com.typesafe" % "config" % "1.4.0"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % Test
-libraryDependencies += "org.slf4j" % "log4j-over-slf4j" % "1.7.26" % Test
+libraryDependencies += "org.slf4j" % "log4j-over-slf4j" % "1.7.29" % Test
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3" % Test
 
 publishMavenStyle := false
